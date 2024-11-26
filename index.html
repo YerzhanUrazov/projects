@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,41 +9,130 @@
     html, body {
         height: 100%;
         margin: 0;
+        font-family: Helvetica;
+        background-color: white;
         display: flex;
         flex-direction: column;
     }
-    #blocklyDiv {
-        height: 80vh;
-        width: 100%;
+
+    #container {
+        display: flex;
+        flex: 1;
+        margin: 10px 20px 20px 20px; /* Отступы сверху и снизу */
+        border-radius: 10px;
+        background-color: #fff;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
-    #buttons {
-        text-align: center;
+
+    #blocklyDiv {
+        flex: 1;
+        height: 100%;
+        background-color: #f9f9f9; /* Цвет фона рабочей области */
+    }
+
+    #sidebar {
+        width: 200px; /* Фиксированная ширина панели с подсказкой */
+        background-color: #E4E4E4; /* Совпадает с фоном Blockly */
+        border-left: 1px solid #ddd;
+        padding: 15px;
+        overflow-y: auto;
+        border-top-right-radius: 10px; /* Скругление верхнего угла */
+        border-bottom-right-radius: 10px; /* Скругление нижнего угла */
+    }
+
+    .hint-button {
+        background-color: #7D8E56;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 5px;
+        width: 100%;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+
+    .hint-button:hover {
+        background-color: #454E2F;
+    }
+
+    .hint-box {
+        display: none; /* Скрыта по умолчанию */
+        border: 1px solid #ccc;
+        background-color: #ffffff;
+        padding: 10px;
         margin-top: 10px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    #output {
+        margin-top: 10px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    h1 {
+        text-align: center;
+        margin: 10px 0;
+        font-size: 24px;
+        color: #333;
+    }
+
+    p {
+        margin: 10px 0;
+        line-height: 1.2;
+        font-size: 14px;
     }
   </style>
 </head>
 <body>
-<h1 style="text-align: center;">Проверить, является ли число положительным</h1>
-<div id="blocklyDiv"></div>
-<div id="buttons">
-  <button onclick="checkSolution()">Проверить решение</button>
-  <div id="output" style="margin-top: 10px; font-weight: bold;"></div>
+
+<h1>Задача: Проверить положительное число</h1>
+<div id="container">
+  <!-- Рабочая область Blockly -->
+  <div id="blocklyDiv"></div>
+
+  <!-- Боковая панель -->
+  <div id="sidebar">
+    <h2 style="text-align:center">Инструкция</h2>
+    <p style= "text-align:center" >Создайте программу, которая проверяет, является ли введённое число больше нуля. Если число больше нуля
+      необходимо вывести сообщение "Правильно"</p>
+
+    <!-- Кнопка проверки решения -->
+    <button class="hint-button" onclick="checkSolution()">Проверить решение</button>
+    <div id="output"></div>
+
+    <!-- Кнопка для показа/скрытия подсказки -->
+    <button class="hint-button" onclick="toggleHint()">Показать подсказку</button>
+
+    <!-- Блок подсказки -->
+    <div class="hint-box" id="hint-box">
+      <h3>Как решить задачу:</h3>
+      <p>1. Перетащите блок <b>if</b> на рабочую область.</p>
+      <p>2. В блоках для чисел введите два числа для сравнения.</p>
+      <p>3. Используйте блок <b>сравнение</b> (например, &gt; или &lt;) в середине блока <b>if</b>.</p>
+      <p>4. В блоке <b>if</b> добавьте действие <b>print</b>, чтобы вывести результат.</p>
+      <p>5. Нажмите "Проверить решение", чтобы узнать, правильно ли вы решили задачу.</p>
+    </div>
+  </div>
 </div>
 
 <script>
   const workspace = Blockly.inject('blocklyDiv', {
-    toolbox: `
-        <xml xmlns="https://developers.google.com/blockly/xml">
-            <block type="math_number"></block>
-            <block type="logic_compare"></block>
-            <block type="controls_if"></block>
-            <block type="text_print"></block>
-            <block type="text">
-                <field name="TEXT">Введите текст</field>
-            </block>
-        </xml>
-    `
-});
+      toolbox: `
+          <xml xmlns="https://developers.google.com/blockly/xml">
+              <block type="math_number"></block>
+              <block type="logic_compare"></block>
+              <block type="controls_if"></block>
+              <block type="text_print"></block>
+              <block type="text">
+                  <field name="TEXT">Введите текст</field>
+              </block>
+          </xml>
+      `
+  });
 
   function checkSolution() {
       const code = Blockly.JavaScript.workspaceToCode(workspace);
@@ -60,6 +149,16 @@
           alert('Ошибка: ' + error.message);
       }
   }
+
+  function toggleHint() {
+      const hintBox = document.getElementById('hint-box');
+      if (hintBox.style.display === 'none' || hintBox.style.display === '') {
+          hintBox.style.display = 'block';
+      } else {
+          hintBox.style.display = 'none';
+      }
+  }
 </script>
+
 </body>
 </html>
